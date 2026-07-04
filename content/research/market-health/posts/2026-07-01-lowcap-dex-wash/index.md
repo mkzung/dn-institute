@@ -105,13 +105,17 @@ The mechanics prove self-trading; the funding graph identifies coordination. Tra
 
 The two BNB-Chain operators do not share a funding ancestor, and neither connects to the Base pool: this is a decentralised pattern, many independent operators rather than one actor.
 
+### The fleets are still trading (rechecked 2026-07-04)
+
+Three days after the census, re-running the live tape check finds the same wallets still dominating all three pools. Eleven of the twelve wallets sampled for SOSO, all eleven for ULTIMA, and all three for IN remain among their pool's fifteen most active traders, each still buying and selling in near-equal counts. The manufactured volume is ongoing, not a single-day artifact. A dated snapshot of this recheck (`data/live_recheck_2026-07-04.json` in the companion repository) records the wallet lists and sample transaction hashes.
+
 ## Limitations
 
 The on-chain figure counts only the identified fleet; the IN pool in particular is manipulated well beyond the three wallets named, so 324,000 dollars is a floor for that pool, not a ceiling. The result does not hinge on that weakest case: SOSO and ULTIMA alone account for 2.5 million dollars of the headline. The contract and Bitquery on-chain checks are EVM-native; the one Solana candidate was checked with Helius and rejected. Prevalence (3 confirmed of 73 screened) is conditional on the screen, not an estimate over all DEX pools. The evidence establishes self-trading and single-operator funding structures, not intent or off-chain identity; manufactured volume of this kind can serve deliberate manipulation or a volume-incentive program. Each funding chain terminates where funds arrive off-native (a bridge or a centralized exchange), which on-chain data alone cannot pierce.
 
 ## Reproducibility
 
-Everything regenerates from the companion repository, [mkzung/dex-volume-integrity](https://github.com/mkzung/dex-volume-integrity), pinned at commit `ec7b155` for this submission. Clone it and check out that commit, run `pip install -r requirements.txt`, then `python3 verify.py` to re-derive and assert every number in this post offline, and `python3 make_figures.py` to rebuild the figures. The collection scripts regenerate the data from the live sources: `runner.py` screens, `aggregate.py` applies the volume and `eth_getCode` filters, `onchain_fullday.py` (Bitquery) and `helius_pyth.py` (Helius) measure the direct full-day on-chain fabricated volume, `control_measure.py` measures the liquid controls, `net_inventory.py` checks holdings, and `attribution.py` traces funding. Dated DexScreener and trade-tape snapshots are included in the repository.
+Everything regenerates from the companion repository, [mkzung/dex-volume-integrity](https://github.com/mkzung/dex-volume-integrity), pinned at commit `e1c1405` for this submission. Clone it and check out that commit, run `pip install -r requirements.txt`, then `python3 verify.py` to re-derive and assert every number in this post offline, and `python3 make_figures.py` to rebuild the figures. The collection scripts regenerate the data from the live sources: `runner.py` screens, `aggregate.py` applies the volume and `eth_getCode` filters, `onchain_fullday.py` (Bitquery) and `helius_pyth.py` (Helius) measure the direct full-day on-chain fabricated volume, `control_measure.py` measures the liquid controls, `net_inventory.py` checks holdings, and `attribution.py` traces funding. Dated DexScreener and trade-tape snapshots are included in the repository.
 
 ## References
 
