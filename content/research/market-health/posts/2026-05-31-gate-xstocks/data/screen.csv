@@ -30,3 +30,5 @@ WMTX,Walmart,3991,False,0.0241,0.24,0.209,0.496,False
 PEPX,PepsiCo,213,False,0.1127,0.834,0.127,0.473,False
 NFLXX,Netflix,336,False,0.0387,0.387,0.034,0.328,False
 MSTRX,MicroStrategy,27467,True,0.0498,0.935,0.034,0.17,False
+SOL,Solana,2180550,True,0.0746,0.005,0.097,0.685,False
+LINK,Chainlink,688530,True,0.0193,0.127,0.107,0.431,False
