@@ -1,6 +1,6 @@
 ---
 title: "A wash-trading signature in Solana's tokenized stocks: five xStock pools carrying matched-trade bot fleets"
-description: "A wallet-level detector scored the liquid xStock pools on Solana. Five exhibit a wash-trading signature: automated wallets that buy and sell in matched size, alternate buy and sell at a near-fixed cadence, and trace to coordinated funding. The same tokens trade cleanly in their other pools. The flag is on the on-chain pattern, not on any identified person; every claim is a named wallet and a transaction hash."
+description: "A wallet-level detector scored the liquid xStock pools on Solana. Five exhibit a wash-trading signature: automated wallets that buy and sell in matched size, alternate buy and sell at a near-fixed cadence, and trace to coordinated funding. The same tokens trade cleanly in their other pools. The flag is on the on-chain pattern, not on any identified person; every claim is a named wallet you can check on a public explorer."
 date: 2026-06-21
 entities:
   - Solana
@@ -12,7 +12,7 @@ entities:
   - Orca
 ---
 
-Five of the most-traded tokenized-stock pools on Solana carry a large share of manufactured volume: fleets of automated wallets that buy and sell the same pool in matched size, never holding a position, several of them funded into existence in coordinated chains. What a centralized tape would report as one inflated number, this post takes apart wallet by wallet - naming them, reconstructing how they were funded, and handing you the transaction hashes.
+Five of the most-traded tokenized-stock pools on Solana carry a large share of manufactured volume: fleets of automated wallets that buy and sell the same pool in matched size, never holding a position, several of them funded into existence in coordinated chains. What a centralized tape would report as one inflated number, this post takes apart wallet by wallet - naming them, reconstructing how they were funded, and pointing you to each one on-chain.
 
 > **Scope.** The flagged conduct is by pseudonymous, automated wallets. Nothing here indicates that Backed Finance, Kraken, the Solana Foundation, Raydium, or Orca operate these wallets, are aware of them, or benefit from them; xStock pools are permissionless, and a venue or issuer does not control who trades in them. This is a flag on an on-chain trading **pattern**, not a finding that any person acted with the intent to mislead that wash trading requires in law.
 
@@ -30,7 +30,7 @@ Five of the most-traded tokenized-stock pools on Solana carry a large share of m
 
 ## The market: xStocks, on-chain on Solana
 
-[xStocks](https://xstocks.com) are tokenized US equities and ETFs issued by **Backed Finance AG** under a Liechtenstein prospectus, each backed one-to-one by a custodied share and minted as an **SPL token on Solana** ([Solana Foundation case study](https://solana.com/news/case-study-xstocks)). They launched on **30 June 2025** with Kraken and the Solana Foundation, and trade against USDC, USDT and SOL on **Raydium**, **Orca** and **Meteora**, with Jupiter routing quotes. A companion study found their centralized-exchange markets carry a [pervasive wash-trading pattern on Gate](https://github.com/mkzung/gate-xstocks-wash-analysis); the question here is whether the same *kind* of pattern appears in the tokens' native, fully transparent venue. It does - and on-chain the analysis can do what no centralized tape allows: name the wallets, reconstruct their funding, and hand the reader the hashes.
+[xStocks](https://xstocks.com) are tokenized US equities and ETFs issued by **Backed Finance AG** under a Liechtenstein prospectus, each backed one-to-one by a custodied share and minted as an **SPL token on Solana** ([Solana Foundation case study](https://solana.com/news/case-study-xstocks)). They launched on **30 June 2025** with Kraken and the Solana Foundation, and trade against USDC, USDT and SOL on **Raydium**, **Orca** and **Meteora**, with Jupiter routing quotes. A companion study found their centralized-exchange markets carry a [pervasive wash-trading pattern on Gate](https://github.com/mkzung/gate-xstocks-wash-analysis); the question here is whether the same *kind* of pattern appears in the tokens' native, fully transparent venue. It does - and on-chain the analysis can do what no centralized tape allows: name the wallets, reconstruct their funding, and point the reader to each account on-chain.
 
 The macro shape is a hint: several xStock pools turn over their entire liquidity tens to a thousand times a day (QQQX: $33.7M of volume on a $20.7k pool, 1,624x) where an organic token like WIF turns over a fraction of its liquidity. This article resolves that hint pool by pool, then wallet by wallet.
 
@@ -136,7 +136,7 @@ The companion repository, [github.com/mkzung/solana-xstocks-wash-analysis](https
 
 ## Appendix: the flagged wallets
 
-The ten largest by **in-window** matched volume are shown, each with its **lifetime** matched total (all xStocks, full on-chain history) alongside; the gap between the two is the sliver the snapshot window caught. (All 14 named bots, with a sample transaction hash for each, are in `data/named_wallets.json`.) Every wallet buys and sells in matched size; each is a System-Program keypair, and each trade is its own transaction. Paste any into a Solana explorer to verify.
+The ten largest by **in-window** matched volume are shown, each with its **lifetime** matched total (all xStocks, full on-chain history) alongside; the gap between the two is the sliver the snapshot window caught. (All 14 named bots, with a sample transaction hash for each, are in [`data/named_wallets.json`](https://github.com/mkzung/solana-xstocks-wash-analysis/blob/f01ac040eb5afcf5f1607d53cfb60ce4f8a4f53e/data/named_wallets.json) in the companion repo.) Every wallet buys and sells in matched size; each is a System-Program keypair, and each trade is its own transaction. Paste any into a Solana explorer to verify.
 
 | Pool | Wallet | Buys / Sells | In-window bought / sold (USD) | Lifetime matched, all xStocks |
 |------|--------|--------------|-------------------------------|-------------------------------|
