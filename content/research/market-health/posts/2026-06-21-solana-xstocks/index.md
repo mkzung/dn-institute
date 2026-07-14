@@ -36,7 +36,7 @@ The macro shape is a hint: several xStock pools turn over their entire liquidity
 
 ## A screen of the liquid xStock pools
 
-A Dexscreener pull over the main xStock tickers returns 32 pools, committed as `data/universe.json`. The collector fetches a tape only for the ones with at least $50,000 of reported 24-hour volume, which leaves 14; all 14 then clear the second filter, at least 150 swaps in the fetched tape, so in practice the volume floor does all of the excluding. Two organic controls run through the identical pipeline, giving the 16 scored pools. The other 18 xStock pools are unscored rather than clean, and some are busy: NVDAX/Orca [`6R4r93V5`](https://solscan.io/account/6R4r93V5fcMzc13CL2enEepDSYcr4Qx3ptZBDwudTXCo) turned over 1,365 swaps in the same 24 hours on $27k of volume, and two more sit just under the line ($46.7k on TSLAX/Raydium, $40.4k on QQQX/Raydium). The floor is a collection cutoff, not a calibrated threshold, and it is the reason "five of sixteen" counts the scored pools rather than every pool these tokens trade in. The pool-level score is the share of dollar volume transacted by wash-bot wallets, where a wash bot is defined purely at the wallet level:
+A Dexscreener pull over the main xStock tickers returns 32 pools, committed as `data/universe.json` in the [companion repository](https://github.com/mkzung/solana-xstocks-wash-analysis) - every file path in this post is in that repo, not in this post's directory. The collector fetches a tape only for the ones with at least $50,000 of reported 24-hour volume, which leaves 14; all 14 then clear the second filter, at least 150 swaps in the fetched tape, so in practice the volume floor does all of the excluding. Two organic controls run through the identical pipeline, giving the 16 scored pools. The other 18 xStock pools are unscored rather than clean, and some are busy: NVDAX/Orca [`6R4r93V5`](https://solscan.io/account/6R4r93V5fcMzc13CL2enEepDSYcr4Qx3ptZBDwudTXCo) turned over 1,365 swaps in the same 24 hours on $27k of volume, and two more sit just under the line ($46.7k on TSLAX/Raydium, $40.4k on QQQX/Raydium). The floor is a collection cutoff, not a calibrated threshold, and it is the reason "five of sixteen" counts the scored pools rather than every pool these tokens trade in. The pool-level score is the share of dollar volume transacted by wash-bot wallets, where a wash bot is defined purely at the wallet level:
 
 > a wallet that buys and sells the same pool at least five times each (`min(buys, sells) >= 5`), and whose total buy and sell dollars land within 10% of each other (`min/max >= 0.90`).
 
@@ -127,12 +127,12 @@ This is a flag on a pattern, not an accusation against a person. Solana addresse
 
 ## Methodology and reproducibility
 
-The companion repository, [github.com/mkzung/solana-xstocks-wash-analysis](https://github.com/mkzung/solana-xstocks-wash-analysis), reproduces every figure and number from a committed snapshot, with CI that reruns the full pipeline. The analysis is pinned at commit [`d0988a7`](https://github.com/mkzung/solana-xstocks-wash-analysis/tree/d0988a72822c23cc30f7585d38709c9a8a741b4a). To regenerate from the raw dumps, check that commit out and run the verifier:
+The companion repository, [github.com/mkzung/solana-xstocks-wash-analysis](https://github.com/mkzung/solana-xstocks-wash-analysis), reproduces every figure and number from a committed snapshot, with CI that reruns the full pipeline. Every file named here - `data/universe.json`, `analysis/verify.py`, the rest - lives in that repository. The analysis is pinned at commit [`5d7053b`](https://github.com/mkzung/solana-xstocks-wash-analysis/tree/5d7053b90032612bfa3ebd65ec083cec0c5ba70f). To regenerate from the raw dumps, check that commit out and run the verifier:
 
 ```bash
 git clone https://github.com/mkzung/solana-xstocks-wash-analysis
 cd solana-xstocks-wash-analysis
-git checkout d0988a72822c23cc30f7585d38709c9a8a741b4a
+git checkout 5d7053b90032612bfa3ebd65ec083cec0c5ba70f
 pip install -r requirements.txt
 python analysis/verify.py     # recomputes every headline number from the committed data
 ```
@@ -146,7 +146,7 @@ python analysis/verify.py     # recomputes every headline number from the commit
 
 ## Appendix: the flagged wallets
 
-The ten largest by in-window matched volume are shown, each with its lifetime matched total (all xStocks, full on-chain history) alongside; the gap between the two is the sliver the snapshot window caught. (All 14 named bots, with a sample transaction hash for each, are in [`data/named_wallets.json`](https://github.com/mkzung/solana-xstocks-wash-analysis/blob/d0988a72822c23cc30f7585d38709c9a8a741b4a/data/named_wallets.json) in the companion repo.) Every wallet buys and sells in matched size, and each is a System-Program keypair rather than a router. A row is a wallet's activity in that pool's tape, which for routed swaps is a leg rather than a whole swap. Paste any address into a Solana explorer to verify.
+The ten largest by in-window matched volume are shown, each with its lifetime matched total (all xStocks, full on-chain history) alongside; the gap between the two is the sliver the snapshot window caught. (All 14 named bots, with a sample transaction hash for each, are in [`data/named_wallets.json`](https://github.com/mkzung/solana-xstocks-wash-analysis/blob/5d7053b90032612bfa3ebd65ec083cec0c5ba70f/data/named_wallets.json) in the companion repo.) Every wallet buys and sells in matched size, and each is a System-Program keypair rather than a router. A row is a wallet's activity in that pool's tape, which for routed swaps is a leg rather than a whole swap. Paste any address into a Solana explorer to verify.
 
 | Pool | Wallet | Buys / Sells | In-window bought / sold (USD) | Lifetime matched, all xStocks |
 |------|--------|--------------|-------------------------------|-------------------------------|
