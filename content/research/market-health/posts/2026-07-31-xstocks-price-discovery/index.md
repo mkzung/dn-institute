@@ -63,9 +63,13 @@ these tickers on mints that are not the issuer's. Their claimed liquidity was
 negligible that day, and the population is not stable: impostor pools appear
 and vanish between screens. Each pool was therefore checked against the vanity
 prefix Backed uses for its issued mints, and only exact-symbol pools on such
-mints were kept. A prefix is a screen, not authentication, so the full mint
-address of every kept token is committed in `data/universe.csv` for
-verification against the issuer's own listings.
+mints were kept. A prefix is a screen, not authentication. Backed publishes no
+machine-readable token list, so every kept mint was checked against Jupiter's
+verified registry, curated independently of this study and of the issuer: all
+24 appear there, under the matching symbol and a name that says xStock.
+`data/registry_check.csv` records the check and `data/universe.csv` carries the
+full addresses. Third-party corroboration is not proof of issuance, and the two
+are not claimed to be the same thing.
 
 That leaves **24 tokens quoted on both venues**. Per dollar of on-chain volume
 in the same mint, Gate's 24-hour volume ranges from 16 cents to **7,311
@@ -141,10 +145,15 @@ is for. It is also the thinnest sample in the table, 82 paired minutes against
 being a caveat: AMZNX turns out to be the study's one clear pool lead, in the
 daily section below.
 
-The ranking is not an artefact of the hours covered. Cutting the sample to the
+The ranking is not an artefact of the hours covered. Cutting the panel to the
 minutes when the US equity market is shut, 86 percent of the window, leaves
 eight pairs measurable and the exchange ahead in all eight, at weights of 0.96
-to 1.24.
+to 1.24. That panel kept no minutes, so its split cannot be re-fitted from
+anything committed here. The same cut runs on the three series passes, which do
+keep theirs: 19 pair-days carry at least 120 shut-hours minutes, the exchange
+leads in 17, and AMZNX stays a pool lead in both regimes.
+`data/sessions_from_series.csv` holds it and `analysis/sessions.py` rebuilds
+it.
 
 {{< figure src="sessions.png" alt="Exchange weights for eight tokens measured on the whole window and on the closed-market hours, both sets sitting near or above one" caption="Whatever sets these prices overnight is doing it on the order book." loading="lazy" >}}
 
@@ -537,17 +546,21 @@ committed.
 
 ### Reproducing
 
-The processed datasets behind every figure and table sit in this article's
+Reproducibility splits by pass. Everything drawn from the three series passes
+re-fits from the committed minute series in `raw/`: every robustness check, the
+daily comparison, the vector and session splits. The two earliest passes, the
+universe snapshot and the session panel, kept only their outputs, so their
+tables are reported rather than re-fittable, and the series passes carry the
+same claims where it matters. The processed datasets behind every figure and table sit in this article's
 `data/` directory. The code, the raw minute series, the tests that hold each
 estimator to an answer it was not told, and `analysis/verify.py`, which reads
-every number in this article back out of the CSVs and exits non-zero if one
-has drifted, live in the companion repository, pinned for this article at
-`37104b2563`:
+every number in this article back out of the CSVs, live in the companion
+repository, pinned for this article at `cae04f2d08`:
 
 ```bash
 git clone https://github.com/mkzung/xstocks-price-discovery
 cd xstocks-price-discovery
-git checkout 37104b2563
+git checkout cae04f2d08
 ```
 
 ```bash
@@ -564,6 +577,8 @@ python analysis/vector.py 2026-07-30               # its cointegrating vector
 python analysis/robustness.py 2026-07-31           # the third day
 python analysis/vector.py 2026-07-31               # its cointegrating vector
 python analysis/windows.py 2026-07-29b 2026-07-30 2026-07-31  # across the calendar
+python analysis/registry.py                        # mints against an outside registry
+python analysis/sessions.py                        # open-against-shut, from the series
 python analysis/build_analysis.py                  # redraw every figure
 python analysis/format_post.py --check             # wrapping is settled
 python analysis/check_post.py                      # formatting, spelling, links
