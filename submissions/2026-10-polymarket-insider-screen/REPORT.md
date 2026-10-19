@@ -7,7 +7,7 @@ This screen covers every resolved Polymarket market that closed between 1 Novemb
 1. The ranking uses four signals anyone can check by hand: cheap money on the eventual winner in the last week, no bets on the losing outcomes of the same event, money concentrated in one event, and a new account. It ranks 17,588 wallets.
 2. Eleven accounts were named by the press or by on-chain analysts as possible insiders in this period. Ten of them are among the tested wallets, and eight of those ten are in the top 100 of the ranking. If the ranking were random, the chance of that would be about 4 in 10^17.
 3. The new finding is a group of 37 wallets that first appeared on Polymarket between 22 and 25 February 2026, traded the same outcomes in the same seconds, and all made money on the 28 February strikes on Iran: $1,330,938 together. The six fresh wallets that Bubblemaps reported on this event are different wallets, and I found no report of this group.
-4. A luck replay, which I used in an earlier version, does not work on these markets: for 78 of 81 multi-market events the real outcome is impossible under it. Section 5 explains why, and the ranking no longer uses it.
+4. A luck replay, which I used in an earlier version, does not work on these markets: on 45 of 47 ladders of "by" dates the real outcome is impossible under it. Section 5 explains why, and the ranking no longer uses it.
 
 Every entry is a pattern for review, not a finding that anyone held inside information. Each case names the explanations that would make it innocent.
 
@@ -47,7 +47,7 @@ Each tested wallet gets four signals from 0 to 1 (`code/10_score.py`).
 - Early cheap money (40 percent): dollars on the eventual winner at 30 cents or less in the seven days before the outcome was known, counted only for shares still held then, on a log scale.
 - Clean bet (20 percent): in the wallet's largest event, the share of its buying that went to the winning side. Someone who knows the date of a strike buys that date. A trader who buys many dates and wins one scores low.
 - Focus (20 percent): the share of its money in its largest event, divided by the square root of how many events it traded.
-- New account (20 percent): 1 when its first Polymarket activity came on the day of its first buy here, falling to 0 at 30 days (`code/09_first_activity.py`).
+- New account (20 percent): 1 when its first Polymarket activity, a deposit included, came on the day of its first buy here, falling to 0 at 30 days (`code/09_first_activity.py`).
 
 The score is 100 times the weighted sum, and the ranking orders wallets by it. The weights are not fitted to anything. The first 100 wallets are the review list (`data/review_wallets.csv`, with every position in `data/review_positions.csv.gz` and every trade in `data/review_trades.csv.gz`). All 17,588 are in `data/wallet_ranking_full.csv.gz`.
 
@@ -62,36 +62,36 @@ A fifth heuristic looks at groups rather than single wallets. `code/11_lockstep.
 | ZachXBT target market, Axiom | [Cryptopolitan](https://www.cryptopolitan.com/insiders-cashed-in-before-axiom-reveal-wallets-bagged-1m-on-polymarket/) | 2 |
 | US strikes Iran by 28 February, Dicedicedice | [The Block](https://www.theblock.co/post/391650/fresh-accounts-netted-1-million-on-polymarket-hours-before-us-airstrikes-on-iran-bubblemaps) | 3 |
 | US strikes Iran by 28 February, Planktonbets | The Block | 4 |
-| ZachXBT target market, Axiom | Cryptopolitan | 5 |
-| US x Iran ceasefire by 7 April | [Cointelegraph](https://cointelegraph.com/news/3-polymarket-traders-made-a-timely-bet-on-a-us-iran-ceasefire) | 6 |
-| US strikes Iran by 28 February, Neodbs | The Block | 10 |
-| Maduro out | [NPR via WBHM](https://wbhm.org/npr-story/a-400000-profit-on-maduros-capture-raises-insider-trading-questions-on-polymarket) | 15 |
-| US strikes Iran by 28 February, largest wallet | The Block | 18 |
-| Super Bowl halftime performer | [Covers](https://www.covers.com/industry/polymarket-user-wins-nearly-all-super-bowl-halftime-wagers-and-profits-about-17k-feb-9-2026) | 135 |
-| Google Year in Search (AlphaRaccoon), later charged | [Forbes](https://www.forbes.com/sites/boazsobrado/2025/12/04/alleged-insider-nets-1-million-on-polymarket-in-24-hours/), [charge](https://cryptopotato.com/google-engineer-accused-of-turning-secret-search-data-into-a-1-2m-polymarket-profit/) | 1,462 |
+| US x Iran ceasefire by 7 April | [Cointelegraph](https://cointelegraph.com/news/3-polymarket-traders-made-a-timely-bet-on-a-us-iran-ceasefire) | 5 |
+| US strikes Iran by 28 February, Neodbs | The Block | 8 |
+| Maduro out | [NPR via WBHM](https://wbhm.org/npr-story/a-400000-profit-on-maduros-capture-raises-insider-trading-questions-on-polymarket) | 13 |
+| US strikes Iran by 28 February, largest wallet | The Block | 16 |
+| ZachXBT target market, Axiom | Cryptopolitan | 24 |
+| Super Bowl halftime performer | [Covers](https://www.covers.com/industry/polymarket-user-wins-nearly-all-super-bowl-halftime-wagers-and-profits-about-17k-feb-9-2026) | 753 |
+| Google Year in Search (AlphaRaccoon), later charged | [Forbes](https://www.forbes.com/sites/boazsobrado/2025/12/04/alleged-insider-nets-1-million-on-polymarket-in-24-hours/), [charge](https://cryptopotato.com/google-engineer-accused-of-turning-secret-search-data-into-a-1-2m-polymarket-profit/) | 1,419 |
 | US x Iran ceasefire by 7 April, second wallet | Cointelegraph | not tested: bought $4,020, under the floor |
 
-Eight of the ten tested accounts are in the top 100. The two misses have reasons. The Super Bowl account put only $386 on the winner at 30 cents or less in the last week. The Google account first appeared on Polymarket 536 days before its first buy here and traded eleven events, so it is neither new nor focused, although its profit, $1,264,791, is the largest of all tested wallets.
+Eight of the ten tested accounts are in the top 100. The two misses have reasons. The Super Bowl account still held only $24 of winning shares bought at 30 cents or less in the last week. The Google account first appeared on Polymarket 536 days before its first buy here and traded eleven events, so it is neither new nor focused, although its profit, $1,264,791, is the largest of all tested wallets.
 
 This shows the ranking finds the accounts that analysts flag, at the scale of the whole market. It does not show those accounts are insiders. Journalists look for the same things: new accounts, cheap bets, timing.
 
-Earlier-day control. `code/13_control.py` moves every outcome clock back by 7 and by 14 days, drops the trades after the moved clock, and ranks again with the same outcomes. In the real ranking, 100 wallets reach the score of rank 100. On the shifted days, 28 and 18 wallets do, and 9 and 6 of the real top 100 are still there (`data/control.csv`). High scores come from what wallets did in the last week before the news, not from being right in general.
+Earlier-day control. `code/13_control.py` moves every outcome clock back by 7 and by 14 days, drops the trades after the moved clock, and ranks again with the same outcomes. In the real ranking, 100 wallets reach the score of rank 100. On the shifted days, 31 and 17 wallets do, and 9 and 5 of the real top 100 are still there (`data/control.csv`). High scores come from what wallets did in the last week before the news, not from being right in general.
 
 ## 4. Results
 
-The review list is concentrated. 72 of the 100 wallets have the "US strikes Iran by" deadlines as their largest event, 9 the ZachXBT market, 7 the 7 April ceasefire, 3 Maduro and 3 Khamenei. 98 of the 100 first appeared on Polymarket within a day of their first buy in the screen, against 37.1 percent of all tested wallets. The new-account signal accounts for part of that gap.
+The review list is concentrated. 73 of the 100 wallets have the "US strikes Iran by" deadlines as their largest event, 9 the ZachXBT market, 7 the 7 April ceasefire, 3 Maduro and 3 Khamenei. 95 of the 100 first appeared on Polymarket, deposits included, within a day of their first buy in the screen, against 33.0 percent of all tested wallets. The new-account signal accounts for part of that gap.
 
 ### 37 wallets before the strikes on Iran
 
 Of all 17,588 tested wallets, 1,725 belong to a lockstep group and there are 59 groups. Only four groups have five or more wallets that all first appeared within three days of each other. Three are on "Xi Jinping out in 2025" and made -$177, -$57 and $14 together. The fourth is group 3 in `data/lockstep_groups.csv`:
 
-- 37 wallets, first active between 13:25 UTC on 22 February and 08:15 UTC on 25 February 2026. 23 share their first second on Polymarket with another member. 185 pairs inside the group bought the same outcome in the same second between 10 and 36 times.
+- 37 wallets, first active between 12:08 UTC on 22 February and 07:26 UTC on 25 February 2026. 185 pairs inside the group bought the same outcome in the same second between 10 and 36 times.
 - From 22 to 27 February they bought NO on every "US strikes Iran by" date from 22 to 27 February, at 89 to 99.5 cents. On 24 and 25 February they also bought NO on 28 February, at 86 to 90 cents.
 - From 20:49 UTC on 27 February to 00:46 UTC on 28 February, every one of the 37 started buying YES on "US strikes Iran by February 28". By 05:58 UTC they had bought $218,348 of it at 30 cents or less. Among tested wallets, YES averaged 13 to 19 cents in every hour from 18:00 UTC on the 27th to 05:00 UTC on the 28th, and 84 cents in the 06:00 hour, when the strikes became known (`data/case_price_paths.csv.gz`).
 - None of them bought YES on any strike date that resolved NO. In their largest event at least 93 percent of each wallet's buying went to the winning side.
 - Every member made money, from $26,310 to $74,547, together $1,330,938. 36 of the 37 are in the top 100 of the ranking.
 
-The public news ran the other way. On 26 February Oman said the third round of talks in Geneva had made significant progress, with more talks planned in Vienna the next week. On 27 February it said Iran had agreed to bring its stockpile of nuclear material down to the lowest level possible ([Al Jazeera timeline](https://www.aljazeera.com/news/2026/2/28/us-israel-bomb-iran-a-timeline-of-talks-and-threats-leading-up-to-attacks)).
+The public news ran the other way. On 27 February Oman's foreign minister, the mediator, told CBS that a deal was "within our reach", that in his view Iran had agreed to down-blend its enriched stockpile, and that technical talks were set for Vienna on the Monday ([CBS transcript](https://www.cbsnews.com/news/full-transcript-omani-foreign-minister-badr-albusaidi/)).
 
 Bubblemaps reported six fresh wallets that made about $1 million on the same contract ([The Block](https://www.theblock.co/post/391650/fresh-accounts-netted-1-million-on-polymarket-hours-before-us-airstrikes-on-iran-bubblemaps)). Four of the six could be identified and are in the table above. None of the four is in this group.
 
@@ -99,7 +99,7 @@ Innocent explanations: one trader spreading a view across many wallets, which is
 
 ## 5. Why there is no luck replay
 
-A luck replay redraws outcomes at the traded prices and asks how often a wallet would do as well by chance. On a ladder of dates it has to draw one number per event, so that "by March 31" cannot resolve NO while "by March 15" resolves YES, and resolve each trade by comparing that number with the trade's price. Prices move, so the real outcome is often one that no draw produces: it needs the number above every YES price paid in the markets that resolved NO and below every YES price paid in those that resolved YES. On "US strikes Iran by", YES traded at up to 98 cents in dates that resolved NO and down to 5 cents in dates that resolved YES. `code/08_replay_check.py` finds the real outcome out of reach in 78 of the 81 multi-market events where some markets resolved YES and some NO, with 99.5 percent of their dollars (`data/replay_check.csv`). A wallet holding NO on one date and YES on the next then shows a profit that no replay reaches, and looks far more significant than it is. My earlier version reported such p-values. This version does not use them.
+A luck replay redraws outcomes at the traded prices and asks how often a wallet would do as well by chance. On a ladder of dates it has to draw one number per event, so that "by March 31" cannot resolve NO while "by March 15" resolves YES, and resolve each trade by comparing that number with the trade's price. Prices move, so the real outcome is often one that no draw produces: it needs the number above every YES price paid in the markets that resolved NO and below every YES price paid in those that resolved YES. On "US strikes Iran by", YES traded at up to 98 cents in dates that resolved NO and down to 5 cents in dates that resolved YES. `code/08_replay_check.py` takes the 47 events that are such ladders, with some dates resolved YES and some NO, and finds the real outcome out of reach in 45 of the 47, with 99.97 percent of their dollars (`data/replay_check.csv`). A wallet holding NO on one date and YES on the next then shows a profit that no replay reaches, and looks far more significant than it is. My earlier version reported such p-values. This version does not use them.
 
 ## 6. Limits
 

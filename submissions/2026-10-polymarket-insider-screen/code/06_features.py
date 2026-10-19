@@ -8,11 +8,14 @@ held share of the winning token.
 
 early_longshot_usd is the money put on the eventual winner at LONGSHOT or less in the LEAD_S
 before t_known, counted only for shares the wallet still held at t_known: a wallet that bought
-cheap and sold again within minutes did not bet on the outcome.
+cheap and sold again within minutes did not bet on the outcome. Sales are matched to earlier
+buys of the same token first in, first out, so shares bought later cannot stand in for cheap
+shares already sold.
 """
 import glob
 import os
 import sys
+from collections import deque
 
 import numpy as np
 import pandas as pd
@@ -30,6 +33,28 @@ def read_scope(datadir):
     scope = pd.read_csv(os.path.join(datadir, "markets_scope.csv"), dtype={"id": str, "event_id": str})
     scope["event_id"] = scope["event_id"].fillna("m" + scope["m"].astype(str))
     return scope
+
+
+def early_held_usd(t):
+    """Cost of the early winner shares each wallet still held at t_known, per wallet and market."""
+    win = t[t["win_tok"]]
+    pairs = pd.MultiIndex.from_frame(win.loc[win["early"], ["w", "m"]].drop_duplicates())
+    win = win[pd.MultiIndex.from_frame(win[["w", "m"]]).isin(pairs)].sort_values("ts", kind="mergesort")
+    kept = {}
+    for key, g in win.groupby(["w", "m"], sort=False):
+        lots = deque()
+        for buy, early, size, price in zip(g["buy"], g["early"], g["size"], g["price"]):
+            if buy:
+                lots.append([size, price if early else None])
+                continue
+            while size > 0 and lots:
+                take = min(size, lots[0][0])
+                lots[0][0] -= take
+                size -= take
+                if lots[0][0] <= 1e-9:
+                    lots.popleft()
+        kept[key] = sum(s * p for s, p in lots if p is not None)
+    return pd.Series(kept, dtype=float)
 
 
 def wallet_market(tape, scope):
@@ -51,9 +76,7 @@ def wallet_market(tape, scope):
             out[f"{side}_sh_{o}"] = s["size"].sum()
             out[f"{side}_usd_{o}"] = s["usd"].sum()
     out = out.fillna(0.0)
-    eg = t[t["early"]].groupby(keys)
-    out["early_usd"] = eg["usd"].sum().reindex(out.index).fillna(0.0)
-    out["early_sh"] = eg["size"].sum().reindex(out.index).fillna(0.0)
+    out["early_longshot_usd"] = early_held_usd(t).reindex(out.index).fillna(0.0)
     out["lead_h_x_usd"] = g["lead_h_x_usd"].sum()
     out = out.reset_index().merge(scope[["m", "winner_index", "event_id", "negRisk"]], on="m")
 
@@ -66,15 +89,12 @@ def wallet_market(tape, scope):
     out["cash"] = out["sell_usd_0"] + out["sell_usd_1"] - out["buy_usd_0"] - out["buy_usd_1"] - minted
     out["cost"] = out["buy_usd_0"] + out["buy_usd_1"] + minted
     win_held = np.where(out["winner_index"] == 0, out["held_0"], out["held_1"])
-    esh = out["early_sh"].to_numpy()
-    kept = np.minimum(esh, np.maximum(win_held, 0.0))
-    out["early_longshot_usd"] = np.where(esh > 0, out["early_usd"].to_numpy() * kept / np.where(esh > 0, esh, 1), 0.0)
     out["pnl"] = out["cash"] + win_held
     win_buy = np.where(out["winner_index"] == 0, out["buy_usd_0"], out["buy_usd_1"])
     out["win_buy_usd"] = win_buy
     out["lose_buy_usd"] = out["buy_usd_0"] + out["buy_usd_1"] - win_buy
     out["win_lead_h_usdw"] = np.where(win_buy > 0, out["lead_h_x_usd"] / np.where(win_buy > 0, win_buy, 1), np.nan)
-    out = out.drop(columns=["early_usd", "early_sh", "lead_h_x_usd"])
+    out = out.drop(columns=["lead_h_x_usd"])
     return out.sort_values(keys).reset_index(drop=True)
 
 

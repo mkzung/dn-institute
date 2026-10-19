@@ -54,22 +54,22 @@ wallets_over_floor,18077
 wallets_high_frequency,197
 wallets_market_maker,292
 wallets_tested,17588
-replay_events,81
-replay_events_unreachable,78
-replay_unreachable_usd_share,0.9952
+replay_events,47
+replay_events_unreachable,45
+replay_unreachable_usd_share,0.9997
 ranked_wallets,17588
 ranked_profitable,8828
 review_wallets,100
-review_events,10
-review_top_event_us-strikes-iran-by,72
+review_events,9
+review_top_event_us-strikes-iran-by,73
 review_top_event_which-crypto-company-will-zachxbt-expose-for-insider-trading,9
 review_top_event_us-x-iran-ceasefire-by,7
 review_top_event_maduro-out-in-2025,3
 review_top_event_khamenei-out-as-supreme-leader-of-iran-by-february-28,3
-review_fresh_1d,98
+review_fresh_1d,95
 review_in_lockstep_group,39
 review_named,8
-tested_fresh_1d_share,0.371
+tested_fresh_1d_share,0.33
 lockstep_pairs,7641
 lockstep_groups,59
 lockstep_wallets,1725
@@ -77,33 +77,33 @@ groups_set_up_together,4
 group_3_size,37
 group_3_pnl,1330938
 group_3_members_in_profit,37
-group_3_first_activity_min,2026-02-22 13:25:28
-group_3_first_activity_max,2026-02-25 08:15:58
+group_3_first_activity_min,2026-02-22 12:08:36
+group_3_first_activity_max,2026-02-25 07:26:16
 group_3_top_event,us-strikes-iran-by
 group_4_size,25
 group_4_pnl,-177
 group_4_members_in_profit,4
-group_4_first_activity_min,2024-08-21 18:05:55
-group_4_first_activity_max,2024-08-22 17:01:15
+group_4_first_activity_min,2024-08-21 13:25:51
+group_4_first_activity_max,2024-08-22 15:40:11
 group_4_top_event,xi-jinping-out-in-2025
 group_5_size,17
 group_5_pnl,-57
 group_5_members_in_profit,7
-group_5_first_activity_min,2025-10-29 03:44:45
-group_5_first_activity_max,2025-10-29 07:47:19
+group_5_first_activity_min,2025-10-29 02:51:57
+group_5_first_activity_max,2025-10-29 04:47:35
 group_5_top_event,xi-jinping-out-in-2025
 group_10_size,5
 group_10_pnl,14
 group_10_members_in_profit,3
-group_10_first_activity_min,2025-10-29 02:18:51
-group_10_first_activity_max,2025-10-29 02:32:19
+group_10_first_activity_min,2025-10-29 02:08:57
+group_10_first_activity_max,2025-10-29 02:18:17
 group_10_top_event,xi-jinping-out-in-2025
 control_shift0_at_or_above_cut,100
 control_shift0_review_list_still_in_top,100
-control_shift7_at_or_above_cut,28
+control_shift7_at_or_above_cut,31
 control_shift7_review_list_still_in_top,9
-control_shift14_at_or_above_cut,18
-control_shift14_review_list_still_in_top,6
+control_shift14_at_or_above_cut,17
+control_shift14_review_list_still_in_top,5
 named_accounts,11
 named_tested,10
 named_in_review_list,8

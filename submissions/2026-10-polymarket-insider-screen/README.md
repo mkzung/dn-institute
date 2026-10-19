@@ -12,7 +12,7 @@ python code/check_pack.py data
 sh code/run_analysis.sh data
 ```
 
-`check_pack.py` checks the committed data against the rules that cut it: every market closed in the window, every outcome clock recomputes to the committed `t_known`, every committed trade is inside the window and before it, every wallet status recomputes, and every file matches `data/SHA256SUMS`. `run_analysis.sh` reads only committed files and rewrites every analysis output in `data/`, ending with `summary.csv`, which holds the counts the report quotes. The compressed files carry no timestamp, so a rerun gives the same bytes and the checksums still match. It takes about two minutes. `wallet_market.csv.gz` (one row per wallet and market) is rebuilt by the run and is not committed; `.gitignore` keeps it out.
+`check_pack.py` checks the committed data against the rules that cut it: every market closed in the window, every outcome clock recomputes to the committed `t_known`, every committed trade is inside the window and before its market's `t_known`, every wallet status recomputes, and every file matches `data/SHA256SUMS`. `run_analysis.sh` reads only committed files and rewrites every analysis output in `data/`, ending with `summary.csv`, which holds the counts the report quotes. The compressed files carry no timestamp, so a rerun gives the same bytes and the checksums still match. It takes about two minutes. `wallet_market.csv.gz` (one row per wallet and market) is rebuilt by the run and is not committed; `.gitignore` keeps it out.
 
 ## Rebuilding the data from the public APIs
 
@@ -28,7 +28,7 @@ python code/09_first_activity.py data data/wallet_first_activity.csv.gz
 python code/check_known_cases.py data
 ```
 
-`01_markets.py` walks the Gamma `/markets/keyset` endpoint, which has no offset cap, in end date slices plus one walk by volume, and `data/gamma_walks.csv` shows every walk ended on an empty cursor. `04_trades.py` pages the Data API `/trades` endpoint backwards in time with its `end` parameter, so each market's tape is complete. The APIs serve live data, so a rebuild months later can differ slightly from the committed files. The analysis above does not depend on this step.
+`01_markets.py` walks the Gamma `/markets/keyset` endpoint, which has no offset cap, in end date slices plus one walk by volume, and `data/gamma_walks.csv` shows every walk ended on an empty cursor. `04_trades.py` pages the Data API `/trades` endpoint backwards in time with its `end` parameter, so each market's tape is complete. The APIs serve live data, so a rebuild months later can differ slightly from the committed files, and `check_pack.py` then reports the checksums as changed; write `data/SHA256SUMS` again with `cd data && shasum -a 256 $(ls | grep -v SHA256SUMS) > SHA256SUMS` once the new files are in place. The analysis above does not depend on this step.
 
 ## Files
 
@@ -38,7 +38,7 @@ Code, in the order it runs:
 - `code/02_window.py` keeps markets whose `closedTime` falls in the window and counts what the scheduled end date would have got wrong.
 - `code/03_scope.py` applies the scope filters and counts what each removes.
 - `code/04_trades.py` downloads full trade tapes.
-- `code/05_pack.py` fixes the moment each outcome became known, keeps the trades inside the window and before it, picks the tested wallets and writes the committed tape.
+- `code/05_pack.py` fixes the moment each outcome became known, keeps the trades inside the window and before the outcome was known, picks the tested wallets and writes the committed tape.
 - `code/06_features.py` builds one row per wallet and market.
 - `code/07_population.py` builds one row per tested wallet.
 - `code/08_replay_check.py` shows why a luck replay cannot be used on these markets.

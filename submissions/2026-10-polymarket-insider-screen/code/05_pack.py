@@ -1,15 +1,16 @@
 """Cut the raw tapes down to the committed dataset.
 
-For every scoped market this step fixes the moment the outcome became known and keeps only
-trades placed before it. Four clocks are read and the earliest one wins:
+It stops if 04_trades.py marked any tape incomplete. For every scoped market it fixes the moment
+the outcome became known and keeps only trades placed before it. Four clocks are read and the
+earliest one wins:
 
   settle   the start of the first ten-minute bucket with at least MIN_PRINTS trades in which
            the volume-weighted YES price (a NO trade at p counts as YES at 1 - p) reached 0.99.
            The trade count keeps one stray print from setting it. From then on the market treats
            YES as settled. This clock looks only at prices up to that moment and not at which
            side finally won. A rule that did, such as "the last hour the winner traded below
-           0.5", would keep exactly the trades placed just before the winner took off, and the
-           luck replay would read them as luck. The clock does not fire when YES falls to 0.01,
+           0.5", would keep exactly the trades placed just before the winner took off, so the cut
+           itself would depend on the outcome. The clock does not fire when YES falls to 0.01,
            because a cheap YES that later wins is the very bet the screen looks for; markets
            that end NO are cut by the clocks below.
   closed   Gamma's closedTime.
@@ -180,6 +181,9 @@ def known(row, ts):
 def main(scope_path, rawdir, outdir, out_scope):
     scope = clocks(pd.read_csv(scope_path, dtype={"id": str, "event_id": str}))
     manifest = json.load(open(os.path.join(rawdir, "manifest.json")))
+    capped = [c for c in scope["conditionId"] if manifest[c]["kind"] != "full"]
+    if capped:
+        raise RuntimeError(f"{len(capped)} tapes are not complete, first {capped[0]}")
     spend, ntr, two, nmk, info, bks = {}, {}, {}, {}, [], {}
     for i, m in scope.iterrows():
         df = load(os.path.join(rawdir, m["conditionId"] + ".csv.gz"))
