@@ -24,11 +24,12 @@ python code/02_window.py RAW/markets RAW/walks.json data/markets_window.csv.xz d
 python code/03_scope.py data/markets_window.csv.xz data/markets_window_detail.csv.xz RAW/markets_scope_pre.csv data/scope_filter_counts.csv
 python code/04_trades.py RAW/markets_scope_pre.csv RAW/trades
 python code/05_pack.py RAW/markets_scope_pre.csv RAW/trades data data/markets_scope.csv
+python code/05b_opening.py RAW/trades data
 python code/09_first_activity.py data data/wallet_first_activity.csv.gz
 python code/check_known_cases.py data
 ```
 
-`01_markets.py` walks the Gamma `/markets/keyset` endpoint, which has no offset cap, in end date slices plus one walk by volume, and `data/gamma_walks.csv` shows every walk ended on an empty cursor. `04_trades.py` pages the Data API `/trades` endpoint backwards in time with its `end` parameter, so each market's tape is complete. The APIs serve live data, so a rebuild months later can differ slightly from the committed files, and `check_pack.py` then reports the checksums as changed; write `data/SHA256SUMS` again with `cd data && shasum -a 256 $(ls | grep -v SHA256SUMS) > SHA256SUMS` once the new files are in place. The analysis above does not depend on this step.
+`01_markets.py` walks the Gamma `/markets/keyset` endpoint, which has no offset cap, in end date slices plus one walk by volume. `data/gamma_walks.csv` shows each slice walk ended on an empty cursor and the volume walk at the $100,000 floor. `04_trades.py` pages the Data API `/trades` endpoint backwards in time with its `end` parameter, so each market's tape is complete. The APIs serve live data, so a rebuild months later can differ slightly from the committed files, and `check_pack.py` then reports the checksums as changed; write `data/SHA256SUMS` again with `cd data && shasum -a 256 $(ls | grep -v SHA256SUMS) > SHA256SUMS` once the new files are in place. The analysis above does not depend on this step.
 
 ## Files
 
@@ -39,6 +40,7 @@ Code, in the order it runs:
 - `code/03_scope.py` applies the scope filters and counts what each removes.
 - `code/04_trades.py` downloads full trade tapes.
 - `code/05_pack.py` fixes the moment each outcome became known, keeps the trades inside the window and before the outcome was known, picks the tested wallets and writes the committed tape.
+- `code/05b_opening.py` records what each wallet already held in each market when the window started, for markets created before it.
 - `code/06_features.py` builds one row per wallet and market.
 - `code/07_population.py` builds one row per tested wallet.
 - `code/08_replay_check.py` shows why a luck replay cannot be used on these markets.
@@ -65,9 +67,10 @@ Data:
 - `data/wallets.csv.gz`: every wallet that bought at least $5,000 in the window before the outcomes were known, with its status (tested, market maker, high frequency).
 - `data/wallets_excluded_markets.csv.gz`: per market trade counts and buying of the market makers and high frequency wallets.
 - `data/tape_part1.csv.xz` to `data/tape_part6.csv.xz`: every committed trade of the tested wallets. Columns: market `m` (column `m` of `markets_scope.csv`), wallet `w` (column `w` of `wallets.csv.gz`), side `B` or `S`, outcome index `o`, shares `size`, `price`, unix time `ts`.
-- `data/wallet_first_activity.csv.gz`: first Polymarket activity per tested wallet.
+- `data/opening_positions.csv.gz`: shares per outcome that a wallet held in a market on 1 November 2025, and their value at the last price before then.
+- `data/wallet_first_activity.csv.gz`: first Polymarket activity per tested wallet, deposits included.
 - `data/population.csv.gz`: one row per tested wallet.
-- `data/replay_check.csv`: per multi-market event, whether a luck replay can reach the real outcome.
+- `data/replay_check.csv`: per ladder of "by" dates, whether a luck replay can reach the real outcome.
 - `data/wallet_ranking.csv` (top 200) and `data/wallet_ranking_full.csv.gz` (all tested wallets): the ranking.
 - `data/lockstep_pairs.csv.gz`, `data/lockstep_groups.csv`: linked wallets and their groups.
 - `data/review_wallets.csv`, `data/review_positions.csv.gz`, `data/review_trades.csv.gz`, `data/case_price_paths.csv.gz`: the review files.

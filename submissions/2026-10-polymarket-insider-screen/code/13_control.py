@@ -26,6 +26,7 @@ SHIFTS = (7, 14)
 
 def main(datadir, out):
     tape, scope = features.read_tape(datadir), features.read_scope(datadir)
+    opening = features.read_opening(datadir)
     wallets = pd.read_csv(os.path.join(datadir, "wallets.csv.gz"))
     fa = pd.read_csv(os.path.join(datadir, "wallet_first_activity.csv.gz"))
     real = pd.read_csv(os.path.join(datadir, "wallet_ranking_full.csv.gz"))
@@ -36,7 +37,7 @@ def main(datadir, out):
     for d in SHIFTS:
         s = scope.copy()
         s["t_known"] = s["t_known"] - d * 86400
-        r = scoring.ranking(features.wallet_market(tape, s), wallets, fa, s)
+        r = scoring.ranking(features.wallet_market(tape, s, opening), wallets, fa, s)
         rows.append({"shift_days": d, "wallets_ranked": len(r), "wallets_at_or_above_cut": int((r["score"] >= cut).sum()),
                      "review_list_still_in_top": len(top & set(r.loc[r["rank"] <= scoring.REVIEW, "wallet"]))})
         print(rows[-1], flush=True)

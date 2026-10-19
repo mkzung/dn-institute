@@ -58,7 +58,7 @@ replay_events,47
 replay_events_unreachable,45
 replay_unreachable_usd_share,0.9997
 ranked_wallets,17588
-ranked_profitable,8828
+ranked_profitable,8900
 review_wallets,100
 review_events,9
 review_top_event_us-strikes-iran-by,73
@@ -81,20 +81,20 @@ group_3_first_activity_min,2026-02-22 12:08:36
 group_3_first_activity_max,2026-02-25 07:26:16
 group_3_top_event,us-strikes-iran-by
 group_4_size,25
-group_4_pnl,-177
-group_4_members_in_profit,4
+group_4_pnl,-293
+group_4_members_in_profit,0
 group_4_first_activity_min,2024-08-21 13:25:51
 group_4_first_activity_max,2024-08-22 15:40:11
 group_4_top_event,xi-jinping-out-in-2025
 group_5_size,17
-group_5_pnl,-57
-group_5_members_in_profit,7
+group_5_pnl,193
+group_5_members_in_profit,14
 group_5_first_activity_min,2025-10-29 02:51:57
 group_5_first_activity_max,2025-10-29 04:47:35
 group_5_top_event,xi-jinping-out-in-2025
 group_10_size,5
-group_10_pnl,14
-group_10_members_in_profit,3
+group_10_pnl,81
+group_10_members_in_profit,5
 group_10_first_activity_min,2025-10-29 02:08:57
 group_10_first_activity_max,2025-10-29 02:18:17
 group_10_top_event,xi-jinping-out-in-2025

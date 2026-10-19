@@ -15,7 +15,7 @@ Every entry is a pattern for review, not a finding that anyone held inside infor
 
 Markets. `code/01_markets.py` walks Gamma's `/markets/keyset` endpoint, which pages with a cursor and has no offset cap, in 17 slices of scheduled end date plus one walk ordered by volume. All 18 walks ran to an empty cursor or to the $100,000 floor (`data/gamma_walks.csv`). Gamma lists 4,352,131 closed markets.
 
-Window. A market is in when 1 November 2025 00:00 UTC <= `closedTime` < 1 May 2026 00:00 UTC: 809,069 markets. The scheduled `endDate` would have been wrong both ways: 4,808 markets scheduled to end in the window closed outside it, and 10,550 that closed in it were scheduled outside it or had no end date (`data/window_counts.csv`). Trades before 1 November are dropped as well, so the analysis covers trading inside the window only. `code/check_pack.py` checks both.
+Window. A market is in when 1 November 2025 00:00 UTC <= `closedTime` < 1 May 2026 00:00 UTC: 809,069 markets. The scheduled `endDate` would have been wrong both ways: 4,808 markets scheduled to end in the window closed outside it, and 10,550 that closed in it were scheduled outside it or had no end date (`data/window_counts.csv`). Trades before 1 November are dropped as well, so the analysis covers trading inside the window only. `code/check_pack.py` checks both. A wallet that already held shares on 1 November starts from that position, valued at the last price before it, so selling those shares does not look like selling shares it never had (`code/05b_opening.py`, `data/opening_positions.csv.gz`).
 
 Scope. A market leaves at the first filter it fails (`code/03_scope.py`, `data/scope_filter_counts.csv`).
 
@@ -68,10 +68,10 @@ A fifth heuristic looks at groups rather than single wallets. `code/11_lockstep.
 | US strikes Iran by 28 February, largest wallet | The Block | 16 |
 | ZachXBT target market, Axiom | Cryptopolitan | 24 |
 | Super Bowl halftime performer | [Covers](https://www.covers.com/industry/polymarket-user-wins-nearly-all-super-bowl-halftime-wagers-and-profits-about-17k-feb-9-2026) | 753 |
-| Google Year in Search (AlphaRaccoon), later charged | [Forbes](https://www.forbes.com/sites/boazsobrado/2025/12/04/alleged-insider-nets-1-million-on-polymarket-in-24-hours/), [charge](https://cryptopotato.com/google-engineer-accused-of-turning-secret-search-data-into-a-1-2m-polymarket-profit/) | 1,419 |
+| Google Year in Search (AlphaRaccoon), later charged | [Forbes](https://www.forbes.com/sites/boazsobrado/2025/12/04/alleged-insider-nets-1-million-on-polymarket-in-24-hours/), [charge](https://cryptopotato.com/google-engineer-accused-of-turning-secret-search-data-into-a-1-2m-polymarket-profit/) | 1,413 |
 | US x Iran ceasefire by 7 April, second wallet | Cointelegraph | not tested: bought $4,020, under the floor |
 
-Eight of the ten tested accounts are in the top 100. The two misses have reasons. The Super Bowl account still held only $24 of winning shares bought at 30 cents or less in the last week. The Google account first appeared on Polymarket 536 days before its first buy here and traded eleven events, so it is neither new nor focused, although its profit, $1,264,791, is the largest of all tested wallets.
+Eight of the ten tested accounts are in the top 100. The two misses have reasons. The Super Bowl account still held only $24 of winning shares bought at 30 cents or less in the last week. The Google account first appeared on Polymarket 536 days before its first buy here and traded eleven events, so it is neither new nor focused, although its profit, $1,314,332, is the largest of all tested wallets.
 
 This shows the ranking finds the accounts that analysts flag, at the scale of the whole market. It does not show those accounts are insiders. Journalists look for the same things: new accounts, cheap bets, timing.
 
@@ -83,7 +83,7 @@ The review list is concentrated. 73 of the 100 wallets have the "US strikes Iran
 
 ### 37 wallets before the strikes on Iran
 
-Of all 17,588 tested wallets, 1,725 belong to a lockstep group and there are 59 groups. Only four groups have five or more wallets that all first appeared within three days of each other. Three are on "Xi Jinping out in 2025" and made -$177, -$57 and $14 together. The fourth is group 3 in `data/lockstep_groups.csv`:
+Of all 17,588 tested wallets, 1,725 belong to a lockstep group and there are 59 groups. Only four groups have five or more wallets that all first appeared within three days of each other. Three are on "Xi Jinping out in 2025" and made -$293, $193 and $81 together. The fourth is group 3 in `data/lockstep_groups.csv`:
 
 - 37 wallets, first active between 12:08 UTC on 22 February and 07:26 UTC on 25 February 2026. 185 pairs inside the group bought the same outcome in the same second between 10 and 36 times.
 - From 22 to 27 February they bought NO on every "US strikes Iran by" date from 22 to 27 February, at 89 to 99.5 cents. On 24 and 25 February they also bought NO on 28 February, at 86 to 90 cents.

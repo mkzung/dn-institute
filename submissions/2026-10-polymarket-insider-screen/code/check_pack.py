@@ -68,6 +68,16 @@ def main(datadir):
           f"{stray} from untested wallets, {bad_n} markets whose count differs")
     ok["tape"] = early == 0 and late == 0 and stray == 0 and bad_n == 0
 
+    op = features.read_opening(datadir)
+    if op is not None:
+        on_tape = set(zip(t["w"], t["m"]))
+        off = sum((w_, m_) not in on_tape for w_, m_ in zip(op["w"], op["m"]))
+        made = set(m.loc[pd.to_datetime(m["createdAt"], utc=True, format="mixed") >= window.LO, "m"])
+        new = int(op["m"].isin(made).sum())
+        neg = int(((op["open_0"] < 0) | (op["open_1"] < 0) | (op["open_cost"] < 0)).sum())
+        print(f"opening positions: {len(op)}, {off} not on the tape, {new} in markets created in the window, {neg} negative")
+        ok["opening"] = off == 0 and neg == 0
+
     t["usd"] = np.where(t["side"] == "B", t["size"] * t["price"], 0.0)
     pm = t.pivot_table(index=["w", "m"], columns="o", values="usd", aggfunc="sum", fill_value=0.0)
     pm["n"] = t.groupby(["w", "m"]).size()
